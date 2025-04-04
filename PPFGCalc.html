@@ -3,47 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Read ASCII File and Display WOB</title>
+    <title>Upload dan Tampilkan Data Excel</title>
 </head>
 <body>
 
-    <h2>Membaca File ASCII dan Menampilkan Data WOB</h2>
-
+    <h2>Upload File Excel dan Tampilkan Data</h2>
+    
+    <!-- Input untuk memilih file Excel -->
     <input type="file" id="fileInput" />
-    <h3>Data WOB:</h3>
-    <pre id="fileContent"></pre>
-    <h3>Data WOB yang Ditemukan:</h3>
-    <pre id="wobData"></pre>
+    <button onclick="generateTable()">Generate Table</button>
+    
+    <h3>Data Excel:</h3>
+    <!-- Tempat untuk menampilkan tabel setelah file diunggah -->
+    <div id="tableContainer"></div>
 
+    <!-- Menyertakan SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
     <script>
+        let excelData = null;  // Tempat untuk menyimpan data Excel yang dibaca
+
+        // Fungsi untuk membaca file Excel
         document.getElementById('fileInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const data = e.target.result;
+                const workbook = XLSX.read(data, { type: 'binary' });
+
+                // Ambil sheet pertama
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
                 
-                reader.onload = function(e) {
-                    const fileContent = e.target.result;
-                    document.getElementById('fileContent').textContent = fileContent;
-                    
-                    // Mencari data WOB dalam file
-                    const wobPattern = /WOB\s*=\s*(\d+(\.\d+)?)/g;  // Pattern untuk menemukan WOB
-                    const wobMatches = [];
-                    let match;
-                    
-                    while ((match = wobPattern.exec(fileContent)) !== null) {
-                        wobMatches.push(match[0]);  // Menyimpan setiap hasil yang ditemukan
-                    }
+                // Convert sheet menjadi JSON
+                excelData = XLSX.utils.sheet_to_json(sheet);
+                console.log(excelData); // Bisa dilihat datanya di console
+            };
 
-                    if (wobMatches.length > 0) {
-                        document.getElementById('wobData').textContent = wobMatches.join('\n');
-                    } else {
-                        document.getElementById('wobData').textContent = 'Data WOB tidak ditemukan.';
-                    }
-                };
-
-                reader.readAsText(file); // Membaca file sebagai teks
-            }
+            reader.readAsBinaryString(file);
         });
+
+        // Fungsi untuk generate tabel dari data yang di-upload
+        function generateTable() {
+            if (excelData && excelData.length > 0) {
+                let tableHtml = "<table border='1' style='border-collapse: collapse; width: 100%;'>";
+                const headers = Object.keys(excelData[0]);
+
+                // Generate header tabel
+                tableHtml += "<thead><tr>";
+                headers.forEach(header => {
+                    tableHtml += `<th style="background-color: #d3d3d3; padding: 8px; text-align: center;">${header}</th>`;
+                });
+                tableHtml += "</tr></thead>";
+
+                // Generate body tabel
+                tableHtml += "<tbody>";
+                excelData.forEach(row => {
+                    tableHtml += "<tr>";
+                    headers.forEach(header => {
+                        tableHtml += `<td style="padding: 8px; text-align: center;">${row[header]}</td>`;
+                    });
+                    tableHtml += "</tr>";
+                });
+                tableHtml += "</tbody></table>";
+
+                // Tampilkan tabel di dalam container
+                document.getElementById('tableContainer').innerHTML = tableHtml;
+            } else {
+                alert("Tidak ada data untuk ditampilkan. Pastikan file Excel sudah diunggah.");
+            }
+        }
     </script>
 
 </body>
