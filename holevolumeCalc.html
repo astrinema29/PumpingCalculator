@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Volume Lubang Bor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        label, input {
+            margin-bottom: 10px;
+        }
+        input[type="number"] {
+            padding: 5px;
+            width: 200px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kalkulator Volume Lubang Bor</h1>
+    
+    <label for="sections">Pilih jumlah section yang akan dibor:</label>
+    <input type="number" id="sections" name="sections" min="1" value="1" onchange="generateSections()">
+    
+    <div id="sections-container"></div>
+
+    <button onclick="calculateVolumes()">Hitung Volume</button>
+
+    <h2>Hasil Perhitungan:</h2>
+    <p id="result"></p>
+
+    <script>
+        function generateSections() {
+            let sectionCount = document.getElementById("sections").value;
+            let container = document.getElementById("sections-container");
+            container.innerHTML = "";
+
+            for (let i = 1; i <= sectionCount; i++) {
+                let sectionDiv = document.createElement("div");
+                sectionDiv.classList.add("section");
+                sectionDiv.innerHTML = `
+                    <h3>Section ${i}</h3>
+                    <label for="idCasing${i}">ID Casing:</label>
+                    <input type="number" id="idCasing${i}" name="idCasing${i"><br>
+                    
+                    <label for="idDrillPipe${i}">ID Drill Pipe:</label>
+                    <input type="number" id="idDrillPipe${i}" name="idDrillPipe${i}" ><br>
+                    
+                    <label for="odDrillPipe${i}">OD Drill Pipe:</label>
+                    <input type="number" id="odDrillPipe${i}" name="odDrillPipe${i}" ><br>
+                    
+                    <label for="openHoleSize${i}">Open Hole Size:</label>
+                    <input type="number" id="openHoleSize${i}" name="openHoleSize${i}"><br>
+                    
+                    <label for="depthOpenHole${i}">Depth Open Hole:</label>
+                    <input type="number" id="depthOpenHole${i}" name="depthOpenHole${i}"><br>
+                    
+                    <label for="depthCasedHole${i}">Depth Cased Hole:</label>
+                    <input type="number" id="depthCasedHole${i}" name="depthCasedHole${i}"><br>
+                `;
+                container.appendChild(sectionDiv);
+            }
+        }
+
+        function calculateVolumes() {
+            let result = "";
+
+            let sectionCount = document.getElementById("sections").value;
+            for (let i = 1; i <= sectionCount; i++) {
+                let idCasing = parseFloat(document.getElementById(`idCasing${i}`).value);
+                let idDrillPipe = parseFloat(document.getElementById(`idDrillPipe${i}`).value);
+                let odDrillPipe = parseFloat(document.getElementById(`odDrillPipe${i}`).value);
+                let openHoleSize = parseFloat(document.getElementById(`openHoleSize${i}`).value);
+                let depthOpenHole = parseFloat(document.getElementById(`depthOpenHole${i}`).value);
+                let depthCasedHole = parseFloat(document.getElementById(`depthCasedHole${i}`).value);
+
+                if (isNaN(idCasing) || isNaN(idDrillPipe) || isNaN(odDrillPipe) || isNaN(openHoleSize) || isNaN(depthOpenHole) || isNaN(depthCasedHole)) {
+                    alert("Tolong masukkan semua nilai dengan benar.");
+                    return;
+                }
+
+                let volumeInsideDrillPipe = Math.pow(idDrillPipe, 2) * depthOpenHole;
+                let volumeOutsideDrillPipe = ((Math.pow(idCasing, 2) - Math.pow(odDrillPipe, 2)) / 1029.4) * depthOpenHole;
+                let casedHoleVolume = volumeOutsideDrillPipe - ((Math.pow(idCasing, 2) - Math.pow(odDrillPipe, 2)) / 1029.4) * depthCasedHole;
+                let openHoleVolume = volumeOutsideDrillPipe * depthOpenHole;
+
+                result += `
+                    <h4>Section ${i}:</h4>
+                    <p>Open Hole Volume: ${openHoleVolume.toFixed(2)} m³</p>
+                    <p>Cased Hole Volume: ${casedHoleVolume.toFixed(2)} m³</p>
+                    <p>Volume Outside Drill Pipe: ${volumeOutsideDrillPipe.toFixed(2)} m³</p>
+                    <p>Volume Inside Drill Pipe: ${volumeInsideDrillPipe.toFixed(2)} m³</p>
+                `;
+            }
+
+            document.getElementById("result").innerHTML = result;
+        }
+
+        // Initial section generation
+        generateSections();
+    </script>
+</body>
+</html>
