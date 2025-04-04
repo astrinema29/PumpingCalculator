@@ -55,7 +55,10 @@
 
     <button onclick="calculateResults()">Calculate</button>
 
-    <div class="result" id="results"></div>
+    <div class="result" id="results">
+      <strong>Result :</strong><br>
+      <span id="resultText"> </span>
+    </div>
   </div>
 
   <script>
@@ -66,8 +69,6 @@
       const linerSize = parseFloat(document.getElementById('linerSize').value);
       const lengthLiner = parseFloat(document.getElementById('lengthLiner').value);
       const efficiency = parseFloat(document.getElementById('efficiency').value);
-
-      // No need to convert lengthLiner to feet now, it remains in inches
 
       // Calculate BPS based on formula: 0.000243 * (OD)^2 * Length (in) * Efficiency
       const BPS = 0.000243 * Math.pow(linerSize, 2) * lengthLiner * efficiency;
@@ -85,7 +86,8 @@
       const maxPress = pressureLoss;
       const maxPressAct = maxPress + 250;
 
-      document.getElementById('results').innerHTML = `
+      // Update the result display
+      document.getElementById('resultText').innerHTML = `
         <strong>BPS:</strong> ${BPS.toFixed(6)}<br>
         <strong>Stroke:</strong> ${stroke.toFixed(2)}<br>
         <strong>Time (min):</strong> ${time.toFixed(2)}<br>
