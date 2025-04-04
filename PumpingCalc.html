@@ -67,11 +67,10 @@
       const lengthLiner = parseFloat(document.getElementById('lengthLiner').value);
       const efficiency = parseFloat(document.getElementById('efficiency').value);
 
-      // Convert length from inches to feet for BPS formula
-      const lengthLinerFeet = lengthLiner / 12;
+      // No need to convert lengthLiner to feet now, it remains in inches
 
-      // Calculate BPS based on formula: 0.000243 * (OD)^2 * Length (ft) * Efficiency
-      const BPS = 0.000243 * Math.pow(linerSize, 2) * lengthLinerFeet * efficiency;
+      // Calculate BPS based on formula: 0.000243 * (OD)^2 * Length (in) * Efficiency
+      const BPS = 0.000243 * Math.pow(linerSize, 2) * lengthLiner * efficiency;
 
       // Calculate stroke required to pump entire hole volume
       const stroke = holeVolume / BPS;
