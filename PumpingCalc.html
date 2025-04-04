@@ -47,7 +47,7 @@
     <label for="linerSize">Liner Size (inches):</label>
     <input type="number" id="linerSize" placeholder="Enter liner size">
 
-    <label for="lengthLiner">Length Liner (feet):</label>
+    <label for="lengthLiner">Length Liner (inches):</label>
     <input type="number" id="lengthLiner" placeholder="Enter liner length">
 
     <label for="efficiency">Efficiency (0 - 1):</label>
@@ -67,8 +67,11 @@
       const lengthLiner = parseFloat(document.getElementById('lengthLiner').value);
       const efficiency = parseFloat(document.getElementById('efficiency').value);
 
-      // Calculate BPS based on formula: 0.000243 * (OD)^2 * Length * Efficiency
-      const BPS = 0.000243 * Math.pow(linerSize, 2) * lengthLiner * efficiency;
+      // Convert length from inches to feet for BPS formula
+      const lengthLinerFeet = lengthLiner / 12;
+
+      // Calculate BPS based on formula: 0.000243 * (OD)^2 * Length (ft) * Efficiency
+      const BPS = 0.000243 * Math.pow(linerSize, 2) * lengthLinerFeet * efficiency;
 
       // Calculate stroke required to pump entire hole volume
       const stroke = holeVolume / BPS;
