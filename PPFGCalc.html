@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read ASCII File and Display WOB</title>
+</head>
+<body>
+
+    <h2>Membaca File ASCII dan Menampilkan Data WOB</h2>
+
+    <input type="file" id="fileInput" />
+    <h3>Data WOB:</h3>
+    <pre id="fileContent"></pre>
+    <h3>Data WOB yang Ditemukan:</h3>
+    <pre id="wobData"></pre>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const fileContent = e.target.result;
+                    document.getElementById('fileContent').textContent = fileContent;
+                    
+                    // Mencari data WOB dalam file
+                    const wobPattern = /WOB\s*=\s*(\d+(\.\d+)?)/g;  // Pattern untuk menemukan WOB
+                    const wobMatches = [];
+                    let match;
+                    
+                    while ((match = wobPattern.exec(fileContent)) !== null) {
+                        wobMatches.push(match[0]);  // Menyimpan setiap hasil yang ditemukan
+                    }
+
+                    if (wobMatches.length > 0) {
+                        document.getElementById('wobData').textContent = wobMatches.join('\n');
+                    } else {
+                        document.getElementById('wobData').textContent = 'Data WOB tidak ditemukan.';
+                    }
+                };
+
+                reader.readAsText(file); // Membaca file sebagai teks
+            }
+        });
+    </script>
+
+</body>
+</html>
