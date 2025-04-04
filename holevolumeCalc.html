@@ -46,42 +46,52 @@
     <p id="result"></p>
 
     <script>
+        // Fungsi untuk menghasilkan inputan section sesuai jumlah yang dipilih
         function generateSections() {
-            let sectionCount = document.getElementById("sections").value;
+            let sectionCount = parseInt(document.getElementById("sections").value);  // Ambil nilai dari input jumlah section
             let container = document.getElementById("sections-container");
-            container.innerHTML = "";
+            container.innerHTML = "";  // Bersihkan kontainer sebelum menambahkan elemen baru
 
+            // Pastikan jumlah section lebih dari 0
+            if (sectionCount < 1) {
+                alert("Jumlah section tidak boleh kurang dari 1.");
+                return;
+            }
+
+            // Loop untuk menambahkan inputan untuk setiap section
             for (let i = 1; i <= sectionCount; i++) {
                 let sectionDiv = document.createElement("div");
                 sectionDiv.classList.add("section");
                 sectionDiv.innerHTML = `
                     <h3>Section ${i}</h3>
                     <label for="idCasing${i}">ID Casing:</label>
-                    <input type="number" id="idCasing${i}" name="idCasing${i"><br>
+                    <input type="number" id="idCasing${i}" name="idCasing${i}" required><br>
                     
                     <label for="idDrillPipe${i}">ID Drill Pipe:</label>
-                    <input type="number" id="idDrillPipe${i}" name="idDrillPipe${i}" ><br>
+                    <input type="number" id="idDrillPipe${i}" name="idDrillPipe${i}" required><br>
                     
                     <label for="odDrillPipe${i}">OD Drill Pipe:</label>
-                    <input type="number" id="odDrillPipe${i}" name="odDrillPipe${i}" ><br>
+                    <input type="number" id="odDrillPipe${i}" name="odDrillPipe${i}" required><br>
                     
                     <label for="openHoleSize${i}">Open Hole Size:</label>
-                    <input type="number" id="openHoleSize${i}" name="openHoleSize${i}"><br>
+                    <input type="number" id="openHoleSize${i}" name="openHoleSize${i}" required><br>
                     
                     <label for="depthOpenHole${i}">Depth Open Hole:</label>
-                    <input type="number" id="depthOpenHole${i}" name="depthOpenHole${i}"><br>
+                    <input type="number" id="depthOpenHole${i}" name="depthOpenHole${i}" required><br>
                     
                     <label for="depthCasedHole${i}">Depth Cased Hole:</label>
-                    <input type="number" id="depthCasedHole${i}" name="depthCasedHole${i}"><br>
+                    <input type="number" id="depthCasedHole${i}" name="depthCasedHole${i}" required><br>
                 `;
                 container.appendChild(sectionDiv);
             }
         }
 
+        // Fungsi untuk menghitung volume setelah inputan semua section selesai
         function calculateVolumes() {
             let result = "";
+            let sectionCount = parseInt(document.getElementById("sections").value);  // Ambil jumlah section
 
-            let sectionCount = document.getElementById("sections").value;
+            // Loop untuk menghitung volume untuk setiap section
             for (let i = 1; i <= sectionCount; i++) {
                 let idCasing = parseFloat(document.getElementById(`idCasing${i}`).value);
                 let idDrillPipe = parseFloat(document.getElementById(`idDrillPipe${i}`).value);
@@ -90,11 +100,13 @@
                 let depthOpenHole = parseFloat(document.getElementById(`depthOpenHole${i}`).value);
                 let depthCasedHole = parseFloat(document.getElementById(`depthCasedHole${i}`).value);
 
+                // Cek apakah semua input sudah diisi dengan benar
                 if (isNaN(idCasing) || isNaN(idDrillPipe) || isNaN(odDrillPipe) || isNaN(openHoleSize) || isNaN(depthOpenHole) || isNaN(depthCasedHole)) {
                     alert("Tolong masukkan semua nilai dengan benar.");
                     return;
                 }
 
+                // Menghitung volume
                 let volumeInsideDrillPipe = Math.pow(idDrillPipe, 2) * depthOpenHole;
                 let volumeOutsideDrillPipe = ((Math.pow(idCasing, 2) - Math.pow(odDrillPipe, 2)) / 1029.4) * depthOpenHole;
                 let casedHoleVolume = volumeOutsideDrillPipe - ((Math.pow(idCasing, 2) - Math.pow(odDrillPipe, 2)) / 1029.4) * depthCasedHole;
@@ -109,10 +121,11 @@
                 `;
             }
 
+            // Menampilkan hasil perhitungan
             document.getElementById("result").innerHTML = result;
         }
 
-        // Initial section generation
+        // Generate inputan untuk section pertama kali
         generateSections();
     </script>
 </body>
