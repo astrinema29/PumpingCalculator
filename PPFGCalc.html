@@ -47,12 +47,14 @@
         function generateTable() {
             if (excelData && excelData.length > 0) {
                 let tableHtml = "<table border='1' style='border-collapse: collapse; width: 100%;'>";
-                const headers = Object.keys(excelData[0]);
-
+                
+                // Kolom yang ingin ditampilkan
+                const selectedColumns = ["TVD", "MDEPTH", "WOB", "RPM", "MWI", "MWO", "Bit Size"];
+                
                 // Generate header tabel
                 tableHtml += "<thead><tr>";
-                headers.forEach(header => {
-                    tableHtml += `<th style="background-color: #d3d3d3; padding: 8px; text-align: center;">${header}</th>`;
+                selectedColumns.forEach(column => {
+                    tableHtml += `<th style="background-color: #d3d3d3; padding: 8px; text-align: center;">${column}</th>`;
                 });
                 tableHtml += "</tr></thead>";
 
@@ -60,8 +62,10 @@
                 tableHtml += "<tbody>";
                 excelData.forEach(row => {
                     tableHtml += "<tr>";
-                    headers.forEach(header => {
-                        tableHtml += `<td style="padding: 8px; text-align: center;">${row[header]}</td>`;
+                    selectedColumns.forEach(column => {
+                        // Pastikan data kolom ada dalam baris
+                        const cellData = row[column] !== undefined ? row[column] : "";
+                        tableHtml += `<td style="padding: 8px; text-align: center;">${cellData}</td>`;
                     });
                     tableHtml += "</tr>";
                 });
