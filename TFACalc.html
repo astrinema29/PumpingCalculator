@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Total Flow Area (TFA) Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+    }
+    .result {
+      background: #e8f5e9;
+      padding: 20px;
+      border: 1px solid #c8e6c9;
+      border-radius: 5px;
+      line-height: 1.8; /* Increase line spacing */
+    }
+    .result strong {
+      display: block;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Total Flow Area (TFA) Calculator</h2>
+
+    <label for="nozzle1">Nozzle 1 Size (inches):</label>
+    <input type="number" id="nozzle1" value="14" placeholder="Enter nozzle size in inches">
+
+    <label for="nozzle2">Nozzle 2 Size (inches):</label>
+    <input type="number" id="nozzle2" value="15" placeholder="Enter nozzle size in inches">
+
+    <label for="nozzle3">Nozzle 3 Size (inches):</label>
+    <input type="number" id="nozzle3" value="16" placeholder="Enter nozzle size in inches">
+
+    <button onclick="calculateTFA()">Calculate TFA</button>
+
+    <div class="result" id="results">
+      <strong>RESULT</strong>
+      <span id="resultText"></span>
+    </div>
+  </div>
+
+  <script>
+    function calculateTFA() {
+      // Get nozzle sizes from input fields
+      const nozzle1 = parseFloat(document.getElementById('nozzle1').value);
+      const nozzle2 = parseFloat(document.getElementById('nozzle2').value);
+      const nozzle3 = parseFloat(document.getElementById('nozzle3').value);
+
+      // Apply the flow area formula for each nozzle: Flow Area = N^2 / 1303.8
+      const flowArea1 = Math.pow(nozzle1, 2) / 1303.8;
+      const flowArea2 = Math.pow(nozzle2, 2) / 1303.8;
+      const flowArea3 = Math.pow(nozzle3, 2) / 1303.8;
+
+      // Calculate the total flow area (TFA)
+      const totalFlowArea = flowArea1 + flowArea2 + flowArea3;
+
+      // Display the result
+      document.getElementById('resultText').innerHTML = `
+        <strong>Flow Area for Nozzle 1 (Size ${nozzle1}"): </strong> ${flowArea1.toFixed(6)}<br>
+        <strong>Flow Area for Nozzle 2 (Size ${nozzle2}"): </strong> ${flowArea2.toFixed(6)}<br>
+        <strong>Flow Area for Nozzle 3 (Size ${nozzle3}"): </strong> ${flowArea3.toFixed(6)}<br>
+        <strong>Total Flow Area (TFA): </strong> ${totalFlowArea.toFixed(6)}
+      `;
+    }
+  </script>
+</body>
+</html>
