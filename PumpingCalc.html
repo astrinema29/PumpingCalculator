@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pumping Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        input, button {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Pumping Calculator</h2>
+    <div class="container">
+        <label for="pressureLoss">Pressure Loss (psi):</label>
+        <input type="number" id="pressureLoss" placeholder="Enter Pressure Loss">
+
+        <label for="holeVolume">Hole Volume (bbl):</label>
+        <input type="number" id="holeVolume" placeholder="Enter Hole Volume">
+
+        <button onclick="calculatePumping()">Calculate</button>
+        
+        <h3>Results:</h3>
+        <p>Stroke: <span id="stroke"></span></p>
+        <p>SPM: <span id="spm"></span></p>
+        <p>Time: <span id="time"></span></p>
+        <p>Hours: <span id="hours"></span></p>
+        <p>BPM: <span id="bpm"></span></p>
+        <p>GPM @ 1MP: <span id="gpm1"></span></p>
+        <p>GPM @ 2MP: <span id="gpm2"></span></p>
+        <p>Max Pressure: <span id="maxPress"></span></p>
+        <p>Max Press Act: <span id="maxPressAct"></span></p>
+    </div>
+
+    <script>
+        function calculatePumping() {
+            let pressureLoss = parseFloat(document.getElementById("pressureLoss").value);
+            let holeVolume = parseFloat(document.getElementById("holeVolume").value);
+            
+            if (isNaN(pressureLoss) || isNaN(holeVolume)) {
+                alert("Please enter valid numbers");
+                return;
+            }
+            
+            let stroke = holeVolume * 10;
+            let spm = pressureLoss / 20;
+            let time = holeVolume / 10;
+            let hours = time / 60;
+            let bpm = spm * 0.1;
+            let gpm1 = bpm * 42;
+            let gpm2 = gpm1 * 2;
+            let maxPress = pressureLoss * 1.1;
+            let maxPressAct = maxPress * 1.1;
+
+            document.getElementById("stroke").innerText = stroke.toFixed(2);
+            document.getElementById("spm").innerText = spm.toFixed(2);
+            document.getElementById("time").innerText = time.toFixed(2);
+            document.getElementById("hours").innerText = hours.toFixed(2);
+            document.getElementById("bpm").innerText = bpm.toFixed(2);
+            document.getElementById("gpm1").innerText = gpm1.toFixed(2);
+            document.getElementById("gpm2").innerText = gpm2.toFixed(2);
+            document.getElementById("maxPress").innerText = maxPress.toFixed(2);
+            document.getElementById("maxPressAct").innerText = maxPressAct.toFixed(2);
+        }
+    </script>
+</body>
+</html>
