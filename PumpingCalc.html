@@ -44,6 +44,15 @@
     <label for="holeVolume">Hole Volume (bbl):</label>
     <input type="number" id="holeVolume" placeholder="Enter hole volume">
 
+    <label for="linerSize">Liner Size (inches):</label>
+    <input type="number" id="linerSize" placeholder="Enter liner size">
+
+    <label for="lengthLiner">Length Liner (feet):</label>
+    <input type="number" id="lengthLiner" placeholder="Enter liner length">
+
+    <label for="efficiency">Efficiency (0 - 1):</label>
+    <input type="number" step="0.01" id="efficiency" value="0.95">
+
     <button onclick="calculateResults()">Calculate</button>
 
     <div class="result" id="results"></div>
@@ -54,23 +63,28 @@
       const pressureLoss = parseFloat(document.getElementById('pressureLoss').value);
       const spm = parseFloat(document.getElementById('spm').value);
       const holeVolume = parseFloat(document.getElementById('holeVolume').value);
+      const linerSize = parseFloat(document.getElementById('linerSize').value);
+      const lengthLiner = parseFloat(document.getElementById('lengthLiner').value);
+      const efficiency = parseFloat(document.getElementById('efficiency').value);
 
-      // Assumed constants from reference image
-      const PO = 0.1058; // Pump Output (bbl/stroke)
+      // Calculate BPS based on formula: 0.000243 * (OD)^2 * Length * Efficiency
+      const BPS = 0.000243 * Math.pow(linerSize, 2) * lengthLiner * efficiency;
 
-      // Calculated outputs
-      const stroke = holeVolume / PO;
+      // Calculate stroke required to pump entire hole volume
+      const stroke = holeVolume / BPS;
+
       const time = stroke / spm;
       const hours = time / 60;
-      const bpm = PO * spm;
+      const bpm = BPS * spm;
       const gpm = bpm * 42;
 
       const gpm1MP = gpm;
       const gpm2MP = gpm * 2;
       const maxPress = pressureLoss;
-      const maxPressAct = maxPress + 250; // Corrected formula
+      const maxPressAct = maxPress + 250;
 
       document.getElementById('results').innerHTML = `
+        <strong>BPS:</strong> ${BPS.toFixed(6)}<br>
         <strong>Stroke:</strong> ${stroke.toFixed(2)}<br>
         <strong>Time (min):</strong> ${time.toFixed(2)}<br>
         <strong>Hours:</strong> ${hours.toFixed(2)}<br>
